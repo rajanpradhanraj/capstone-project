@@ -1,0 +1,26 @@
+<mat-card class="product-card">
+  <img
+    mat-card-image
+    *ngIf="product?.imageUrl; else noImg"
+    [src]="product?.imageUrl"
+    [alt]="product?.name" />
+
+  <ng-template #noImg>
+    <div class="no-image">No Image</div>
+  </ng-template>
+
+  <mat-card-content>
+    <mat-card-title class="product-title">{{ product?.name }}</mat-card-title>
+    <mat-card-subtitle class="product-price">
+      {{ product?.price | currency:'INR':'symbol':'1.2-2' }}
+    </mat-card-subtitle>
+    <p class="product-description" *ngIf="product?.description">
+      {{ product?.description }}
+    </p>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="view.emit(product)">View</button>
+    <button mat-stroked-button color="accent" (click)="addToCart.emit(product)">Add to Cart</button>
+  </mat-card-actions>
+</mat-card>

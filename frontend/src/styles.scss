@@ -1,0 +1,132 @@
+/* Import Angular Material theming (fix for build error) */
+@use '@angular/material' as mat;
+
+/* Global Styles */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Custom styles */
+.container-fluid {
+  padding: 0;
+}
+
+.navbar-brand {
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+
+.card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.product-image {
+  height: 200px;
+  object-fit: cover;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.price {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.btn-cart {
+  background: #007bff;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cart:hover {
+  background: #0056b3;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.error-message {
+  color: #dc3545;
+  text-align: center;
+  padding: 20px;
+}
+
+.success-message {
+  color: #28a745;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Admin specific styles */
+.admin-sidebar {
+  background: #343a40;
+  min-height: 100vh;
+}
+
+.admin-sidebar .nav-link {
+  color: #fff;
+  padding: 12px 20px;
+}
+
+.admin-sidebar .nav-link:hover {
+  background: #495057;
+}
+
+.admin-sidebar .nav-link.active {
+  background: #007bff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-sidebar {
+    min-height: auto;
+  }
+  
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+/* Material Design customizations */
+.mat-toolbar {
+  background: #007bff !important;
+  color: white !important;
+}
+
+.mat-card {
+  margin: 10px;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}

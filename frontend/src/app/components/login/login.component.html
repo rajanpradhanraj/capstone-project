@@ -1,0 +1,77 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Left Panel - Image Section -->
+    <div class="image-panel">
+      <div class="image-overlay">
+        <div class="image-content">
+          <h1 class="brand-title">E-Commerce Store</h1>
+          <p class="brand-subtitle">Professional Shopping Portal</p>
+          <div class="image-container">
+            <img src="https://parshdigital.com/services/shopping-banner.webp" 
+                 alt="E-Commerce Shopping Banner" 
+                 class="login-image">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel - Login Form -->
+    <div class="form-panel">
+      <div class="form-container">
+        <div class="form-header">
+          <h2 class="welcome-title">Welcome Back</h2>
+          <p class="welcome-subtitle">Please sign in to access your account</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off" class="login-form">
+          <!-- Username Field -->
+          <div class="form-field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="username" required autocomplete="off" placeholder="Enter your username">
+              <mat-icon matPrefix>person</mat-icon>
+              <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+                Username is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-field">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" formControlName="password" required autocomplete="new-password" placeholder="Enter your password">
+              <mat-icon matPrefix>lock</mat-icon>
+              <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+                Password is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Forgot Password Link -->
+          <div class="forgot-password">
+            <a href="#" class="forgot-link">Forgot your password?</a>
+          </div>
+
+          <!-- Sign In Button -->
+          <button mat-raised-button color="primary" type="submit" class="signin-btn" 
+                  [disabled]="loading || !loginForm.valid">
+            <mat-icon *ngIf="!loading">login</mat-icon>
+            <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+            {{ loading ? 'Signing In...' : 'Sign In Securely' }}
+          </button>
+
+          <!-- Divider -->
+          <div class="divider">
+            <span>or</span>
+          </div>
+
+          <!-- Register Link -->
+          <div class="register-section">
+            <p>Don't have an account? <a routerLink="/register" class="register-link">Register Here</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

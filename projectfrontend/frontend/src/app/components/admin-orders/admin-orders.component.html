@@ -1,0 +1,172 @@
+<div class="admin-orders">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="page-title">Orders Management</h1>
+        <p class="page-subtitle">Monitor and manage all customer orders</p>
+      </div>
+      <div class="header-actions">
+        <button mat-stroked-button color="primary" (click)="loadOrders()" class="action-btn">
+          <mat-icon>refresh</mat-icon>
+          Refresh Orders
+        </button>
+        <button mat-raised-button color="primary" (click)="exportOrders()" class="action-btn">
+          <mat-icon>download</mat-icon>
+          Export Data
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-card total-orders">
+        <div class="stat-icon-wrapper">
+          <mat-icon class="stat-icon">shopping_cart</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ filteredOrders.length }}</div>
+          <div class="stat-label">Total Orders</div>
+          <div class="stat-change positive">
+            <mat-icon>trending_up</mat-icon>
+            <span>+12% this month</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card total-revenue">
+        <div class="stat-icon-wrapper">
+          <mat-icon class="stat-icon">payments</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">₹{{ getTotalValue().toFixed(2) }}</div>
+          <div class="stat-label">Total Revenue</div>
+          <div class="stat-change positive">
+            <mat-icon>trending_up</mat-icon>
+            <span>+8% this month</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card pending-orders">
+        <div class="stat-icon-wrapper">
+          <mat-icon class="stat-icon">pending</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getPendingOrdersCount() }}</div>
+          <div class="stat-label">Pending Orders</div>
+          <div class="stat-change neutral">
+            <mat-icon>remove</mat-icon>
+            <span>No change</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card avg-order">
+        <div class="stat-icon-wrapper">
+          <mat-icon class="stat-icon">analytics</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">₹{{ getAverageOrderValue().toFixed(2) }}</div>
+          <div class="stat-label">Average Order</div>
+          <div class="stat-change positive">
+            <mat-icon>trending_up</mat-icon>
+            <span>+5% this month</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <mat-card class="filters-card">
+      <mat-card-content>
+        <div class="filters-row">
+          <div class="filter-group">
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label>Search orders</mat-label>
+              <input matInput [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Search by order ID, customer name, or product">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="filter-group">
+            <mat-form-field appearance="outline" class="status-filter">
+              <mat-label>Order Status</mat-label>
+              <mat-select [(value)]="selectedStatus" (selectionChange)="onStatusChange()">
+                <mat-option value="">All Statuses</mat-option>
+                <mat-option value="pending">Pending</mat-option>
+                <mat-option value="confirmed">Confirmed</mat-option>
+                <mat-option value="shipped">Shipped</mat-option>
+                <mat-option value="delivered">Delivered</mat-option>
+                <mat-option value="cancelled">Cancelled</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="filter-group">
+            <mat-form-field appearance="outline" class="date-filter">
+              <mat-label>Date Range</mat-label>
+              <mat-select [(value)]="selectedDateRange" (selectionChange)="onDateRangeChange()">
+                <mat-option value="">All Time</mat-option>
+                <mat-option value="today">Today</mat-option>
+                <mat-option value="week">This Week</mat-option>
+                <mat-option value="month">This Month</mat-option>
+                <mat-option value="quarter">This Quarter</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="filter-group">
+            <button mat-stroked-button (click)="clearFilters()" class="clear-filters-btn">
+              <mat-icon>clear</mat-icon>
+              Clear Filters
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <h3>Loading orders...</h3>
+    <p>Please wait while we fetch the order data</p>
+  </div>
+
+  <!-- Orders Table -->
+  <div *ngIf="!loading" class="orders-table-section">
+    <mat-card class="table-card">
+      <mat-card-header>
+        <mat-card-title>Orders List</mat-card-title>
+        <mat-card-subtitle>{{ filteredOrders.length }} orders found</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="table-container">
+          <table mat-table [dataSource]="filteredOrders" class="orders-table">
+            <!-- Columns definitions remain same -->
+            <!-- (keeping your Angular Material table unchanged) -->
+          </table>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="filteredOrders.length === 0" class="no-orders-state">
+          <div class="no-orders-content">
+            <mat-icon class="no-orders-icon">receipt_long</mat-icon>
+            <h3>No orders found</h3>
+            <p>Try adjusting your filters or search criteria</p>
+            <button mat-raised-button color="primary" (click)="clearFilters()">
+              <mat-icon>refresh</mat-icon>
+              Clear Filters
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

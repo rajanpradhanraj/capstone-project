@@ -1,0 +1,130 @@
+<div class="order-history">
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-left">
+      <h1>🛒 Order History</h1>
+      <p>Track your purchases and order status</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button color="primary" routerLink="/user/products">
+        <mat-icon>store</mat-icon>
+        Continue Shopping
+      </button>
+      <button mat-raised-button color="primary" (click)="loadOrders()">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <section *ngIf="loading" class="state-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <h3>Loading your orders...</h3>
+    <p>Please wait while we fetch your order history.</p>
+  </section>
+
+  <!-- No Orders -->
+  <section *ngIf="!loading && orders.length === 0" class="state-container no-orders">
+    <mat-icon>receipt_long</mat-icon>
+    <h2>No Orders Yet</h2>
+    <p>Start shopping to see your order history here</p>
+    <div class="state-actions">
+      <button mat-raised-button color="primary" routerLink="/user/products">
+        <mat-icon>store</mat-icon> Start Shopping
+      </button>
+      <button mat-stroked-button color="accent" routerLink="/user/products">
+        <mat-icon>explore</mat-icon> Browse Products
+      </button>
+    </div>
+  </section>
+
+  <!-- Orders Available -->
+  <section *ngIf="!loading && orders.length > 0">
+    <!-- Orders Summary -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <mat-icon>receipt</mat-icon>
+        <div>
+          <p>Total Orders</p>
+          <h3>{{ orders.length }}</h3>
+        </div>
+      </div>
+      <div class="summary-card">
+        <mat-icon>payments</mat-icon>
+        <div>
+          <p>Total Spent</p>
+          <h3>₹{{ getTotalSpent().toFixed(2) }}</h3>
+        </div>
+      </div>
+      <div class="summary-card">
+        <mat-icon>local_shipping</mat-icon>
+        <div>
+          <p>Active Orders</p>
+          <h3>{{ getActiveOrdersCount() }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders List -->
+    <div class="orders-list">
+      <mat-card *ngFor="let order of orders; trackBy: trackOrder" class="order-card" [class.expanded]="expandedOrder === order.id">
+        <!-- Header -->
+        <div class="order-header" (click)="toggleOrderDetails(order.id)">
+          <div class="order-info">
+            <h3>#{{ order.id }}</h3>
+            <p>{{ order.created_at | date:'MMM dd, yyyy' }} at {{ order.created_at | date:'HH:mm' }}</p>
+          </div>
+          <div class="order-meta">
+            <span class="amount">₹{{ order.total_amount.toFixed(2) }}</span>
+            <span class="status {{ getStatusClass(order.status) }}">
+              <mat-icon>{{ getStatusIcon(order.status) }}</mat-icon> 
+              {{ order.status | titlecase }}
+            </span>
+            <mat-icon class="expand-icon">{{ expandedOrder === order.id ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div *ngIf="expandedOrder === order.id" class="order-details">
+          <h4>Items Ordered</h4>
+          <div class="order-items">
+            <div class="order-item" *ngFor="let item of order.items">
+              <img src="https://via.placeholder.com/60" [alt]="item.product_name">
+              <div class="item-info">
+                <strong>{{ item.product_name }}</strong>
+                <small>ID: {{ item.product_id }}</small>
+              </div>
+              <div class="item-price">
+                ₹{{ item.price.toFixed(2) }} × {{ item.quantity }}
+              </div>
+              <div class="item-subtotal">
+                ₹{{ item.subtotal.toFixed(2) }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div class="order-summary">
+            <div><span>Subtotal:</span> ₹{{ order.total_amount.toFixed(2) }}</div>
+            <div><span>Tax (8%):</span> ₹{{ (order.total_amount * 0.08).toFixed(2) }}</div>
+            <div class="total"><span>Total:</span> ₹{{ (order.total_amount * 1.08).toFixed(2) }}</div>
+          </div>
+
+          <!-- Actions -->
+          <div class="order-actions">
+            <button mat-stroked-button color="primary">
+              <mat-icon>receipt</mat-icon> Invoice
+            </button>
+            <button mat-stroked-button color="accent">
+              <mat-icon>support_agent</mat-icon> Help
+            </button>
+            <button mat-stroked-button color="warn" *ngIf="order.status === 'pending'">
+              <mat-icon>cancel</mat-icon> Cancel
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </section>
+</div>
